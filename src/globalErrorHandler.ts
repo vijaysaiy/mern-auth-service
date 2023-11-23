@@ -7,6 +7,7 @@ export const globalErrorHandler = (
     err: HttpError,
     req: Request,
     res: Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     next: NextFunction,
 ) => {
     logger.error(err.message);
