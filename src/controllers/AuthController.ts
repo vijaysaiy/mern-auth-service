@@ -1,4 +1,5 @@
 import { NextFunction, Response } from 'express';
+import { validationResult } from 'express-validator';
 import { Logger } from 'winston';
 import { UserService } from '../services/UserService';
 import { RegisterUserRequest } from '../types';
@@ -15,7 +16,17 @@ export class AuthController {
         next: NextFunction,
     ) {
         try {
+            // Validation
+            const result = validationResult(req);
+            if (!result.isEmpty()) {
+                this.logger.error('Invalid field passed during registration', {
+                    body: req.body,
+                });
+                return res.status(400).json({ errors: result.array() });
+            }
+
             const { firstName, lastName, email, password } = req.body;
+
             this.logger.debug('New request to register a user', {
                 firstName,
                 lastName,
