@@ -5,6 +5,8 @@ import authRouter from './routes/auth';
 
 const app = express();
 
+app.use(express.json());
+
 app.get('/', async (req: Request, res: Response) => {
     const name = (req.query.name as string) || '';
     res.status(200).send('Welcome to auth service: ' + name);
