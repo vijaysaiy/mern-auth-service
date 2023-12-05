@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import app from '../../app';
 import { AppDataSource } from '../../config/data-source';
 import { Roles } from '../../constants';
+import { RefreshToken } from '../../entity/RefreshToken';
 import { User } from '../../entity/User';
 import { isJwt } from '../utils';
 
@@ -195,11 +196,33 @@ describe('POST /auth/register', () => {
                     refreshToken = cookie.split(';')[0].split('=')[1];
                 }
             });
-            console.log(refreshToken);
             expect(accessToken).not.toBeNull();
             expect(refreshToken).not.toBeNull();
             expect(isJwt(accessToken)).toBeTruthy();
             expect(isJwt(refreshToken)).toBeTruthy();
+        });
+        it('should store the refresh token in the database', async () => {
+            const userData = {
+                firstName: 'Vijaysai',
+                lastName: 'Y',
+                email: 'vijaysai@email.com',
+                password: 'secret@123',
+            };
+
+            // Act
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            const refreshTokenRepo = connection.getRepository(RefreshToken);
+
+            const tokens = await refreshTokenRepo
+                .createQueryBuilder('refreshToken')
+                .where('refreshToken.userId = :userId', {
+                    userId: (response.body as Record<string, string>).id,
+                })
+                .getMany();
+            expect(tokens).toHaveLength(1);
         });
     });
 
