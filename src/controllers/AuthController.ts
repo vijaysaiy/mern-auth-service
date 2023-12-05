@@ -20,7 +20,8 @@ export class AuthController {
             const result = validationResult(req);
             if (!result.isEmpty()) {
                 this.logger.error('Invalid field passed during registration', {
-                    body: req.body,
+                    body: { ...req.body, password: '********' },
+                    errors: result.array(),
                 });
                 return res.status(400).json({ errors: result.array() });
             }
