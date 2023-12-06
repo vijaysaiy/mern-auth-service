@@ -31,4 +31,10 @@ export class UserService {
             throw createHttpError(500, 'Failed to register the user');
         }
     }
+
+    async findByEmail(email: string) {
+        return this.userRepository.findOne({
+            where: { email },
+        });
+    }
 }
