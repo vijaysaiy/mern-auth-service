@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import express, { Request, Response } from 'express';
 import 'reflect-metadata';
 import { globalErrorHandler } from './config/globalErrorHandler';
@@ -5,6 +6,7 @@ import authRouter from './routes/auth';
 
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.get('/', async (req: Request, res: Response) => {

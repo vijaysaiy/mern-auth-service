@@ -6,7 +6,11 @@ import { Logger } from 'winston';
 import { CredentialService } from '../services/CredentialService';
 import { TokenService } from '../services/TokenService';
 import { UserService } from '../services/UserService';
-import { LoginUserRequest, RegisterUserRequest } from '../types';
+import {
+    LoginUserRequest,
+    RegisterUserRequest,
+    SelfAuthRequest,
+} from '../types';
 
 export class AuthController {
     constructor(
@@ -153,6 +157,16 @@ export class AuthController {
             // Return the response (id)
             this.logger.info('User has been logged in', { id: user.id });
             res.status(200).json({ id: user.id });
+        } catch (error) {
+            next(error);
+            return;
+        }
+    }
+
+    async self(req: SelfAuthRequest, res: Response, next: NextFunction) {
+        try {
+            const user = await this.userService.findById(Number(req.auth.sub));
+            res.json(user);
         } catch (error) {
             next(error);
             return;
