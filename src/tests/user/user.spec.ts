@@ -71,7 +71,6 @@ describe('GET /auth/self', () => {
 
             // Assert
             // Check if user id matches with registered user
-            console.log(response.body);
             expect((response.body as Record<string, string>).id).toBe(data.id);
         });
         it('should not have the password in user data', async () => {
