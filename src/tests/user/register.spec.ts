@@ -139,6 +139,7 @@ describe('POST /auth/register', () => {
             const users = await userRepository.find();
             const savedPassword = users[0].password;
             expect(savedPassword).not.toBe(userData.password);
+
             // also check whether it is hash or not
             // bcrypt hash is 60char long
             // "$2b$10$hU30Pj7DSxYOrz1yzBqhIelA6gilEVnA/lIB6kitNgnSoVq40Mn0q"
