@@ -7,11 +7,7 @@ import { User } from '../entity/User';
 import { CredentialService } from '../services/CredentialService';
 import { TokenService } from '../services/TokenService';
 import { UserService } from '../services/UserService';
-import {
-    LoginUserRequest,
-    RegisterUserRequest,
-    SelfAuthRequest,
-} from '../types';
+import { AuthRequest, LoginUserRequest, RegisterUserRequest } from '../types';
 
 export class AuthController {
     constructor(
@@ -149,7 +145,7 @@ export class AuthController {
         }
     }
 
-    async self(req: SelfAuthRequest, res: Response, next: NextFunction) {
+    async self(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const user = await this.userService.findById(Number(req.auth.sub));
             res.json({ ...user, password: undefined });
@@ -159,7 +155,7 @@ export class AuthController {
         }
     }
 
-    async refresh(req: SelfAuthRequest, res: Response, next: NextFunction) {
+    async refresh(req: AuthRequest, res: Response, next: NextFunction) {
         try {
             const user = await this.userService.findById(Number(req.auth.sub));
 
@@ -173,6 +169,23 @@ export class AuthController {
 
             this.logger.info('Token has been refreshed ', { id: user.id });
             res.status(200).json({ id: user.id });
+        } catch (error) {
+            next(error);
+            return;
+        }
+    }
+
+    async logout(req: AuthRequest, res: Response, next: NextFunction) {
+        try {
+            const refreshTokenId = req.auth.id;
+            await this.tokenService.deleteRefreshToken(Number(refreshTokenId));
+            this.logger.info('Refresh token has been deleter', {
+                id: refreshTokenId,
+            });
+            this.logger.info('User has been logged out', { id: req.auth.sub });
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            res.json({ message: 'logout succesfull' });
         } catch (error) {
             next(error);
             return;

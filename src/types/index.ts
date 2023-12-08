@@ -20,7 +20,7 @@ export interface LoginUserRequest extends Request {
     body: LoginData;
 }
 
-export interface SelfAuthRequest extends Request {
+export interface AuthRequest extends Request {
     auth: {
         sub: string;
         role: string;
