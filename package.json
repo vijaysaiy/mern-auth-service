@@ -14,7 +14,10 @@
       "docker-build:dev": "docker build -t auth-service:dev -f docker/dev/DockerFile .",
       "docker-run:dev": "docker run --name auth-service-container --rm -it -v %cd%:/usr/src/app:delegated -v /usr/src/app/node_modules --env-file %cd%/.env -p 5501:5501 -e NODE_ENV=development auth-service:dev",
       "start": "ts-node src/index.ts",
-      "typeorm": "typeorm-ts-node-commonjs"
+      "migration:generate": "typeorm-ts-node-commonjs migration:generate",
+      "migration:run":"typeorm-ts-node-commonjs migration:run",
+      "migration:create":"typeorm-ts-node-commonjs migration:create",
+      "postgres-start":"docker run --rm --name auth-pg-container -e POSTGRES_USER=root -e POSTGRES_PASSWORD=root -v auth-pg-data:/var/lib/postgresql/data -p 5432:5432 -d postgres"
    },
    "author": "Vijaysai Yekbote <vijaysaiyekbote@gmail.com>",
    "license": "ISC",

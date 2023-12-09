@@ -1,6 +1,14 @@
 import winston from 'winston';
 import { Config } from './index';
-
+const ColorizeOptions = {
+    all: true,
+    colors: {
+        info: 'blue',
+        error: 'red',
+        warn: 'yellow',
+        debug: 'magenta',
+    },
+};
 const logger = winston.createLogger({
     level: 'info',
     defaultMeta: {
@@ -32,6 +40,29 @@ const logger = winston.createLogger({
         new winston.transports.Console({
             level: 'info',
             silent: Config.NODE_ENV === 'test',
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.json(),
+                winston.format.colorize(ColorizeOptions),
+            ),
+        }),
+        new winston.transports.Console({
+            level: 'debug',
+            silent: Config.NODE_ENV === 'test',
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.json(),
+                winston.format.colorize(ColorizeOptions),
+            ),
+        }),
+        new winston.transports.Console({
+            level: 'error',
+            silent: Config.NODE_ENV === 'test',
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.json(),
+                winston.format.colorize(ColorizeOptions),
+            ),
         }),
     ],
 });
