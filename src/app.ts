@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import 'reflect-metadata';
 import { globalErrorHandler } from './config/globalErrorHandler';
 import authRouter from './routes/auth';
-
+import tenantRouter from './routes/tenant';
 const app = express();
 
 app.use(express.static('public'));
@@ -16,6 +16,7 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/tenants', tenantRouter);
 
 // global error handler; keep this last
 app.use(globalErrorHandler);
