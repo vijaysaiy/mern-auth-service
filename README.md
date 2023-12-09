@@ -1,1 +1,1 @@
-# mern-typescript-microservice-fullstack
+# Auth service using nodejs and typescript, postgres
